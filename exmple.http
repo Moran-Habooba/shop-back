@@ -1,0 +1,178 @@
+@local = http://localhost:3000
+
+
+POST {{local}}/api/users
+Content-Type: application/json
+
+   {
+      "name": { "first": "בדיקת כרטיס", "last": "test" },
+      "isBusiness": false,
+      "isAdmin":true,
+      "phone": "0507777777",
+      "email": "nofno@gmail.com",
+      "password": "Mm123456!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "bla",
+        "houseNumber": "8"
+        
+      },
+      "image": { "url": "https://cdn.pixabay.com/photo/2023/12/14/07/44/dog-8448345_1280.jpg", "alt": "test" }
+    }
+
+###
+POST {{local}}/api/login
+Content-Type: application/json
+
+{  
+            "email": "moranhabooba@gmail.com",
+      "password": "Ww123123123@!"
+
+}
+###
+
+
+###
+GET {{local}}/api/users/me
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE1MzE0OGNmNDczZmMzN2MyMTBkODYiLCJpc0J1c2luZXNzIjpmYWxzZSwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA1MzI0OTU4fQ.7wQeBHqbqDRMxMfwgv55Kp0DhvdjQdL-HvTuEXZ_Rw8
+###
+GET {{local}}/api/users
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWEzYmI2YmEwMjgwNjM0MmU4NWJhMmEiLCJpc0J1c2luZXNzIjp0cnVlLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzA1MjM4MDU4fQ.6GWX_iup_A5CVjWkYNslwxbMVqzAgiCtOIX4pj3ZwpQ
+###
+GET {{local}}/api/users/65a4e7d8dc57896bdf589c9d
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE0ZTdkOGRjNTc4OTZiZGY1ODljOWQiLCJpc0J1c2luZXNzIjpmYWxzZSwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA1MzA2NzYxfQ.0XGZ2R7EwYmbkcw3Y9ETBr3BhPo7Dha9R_XaDOClZPQ
+
+###
+PUT {{local}}/api/users/edit/65a4e7d8dc57896bdf589c9d
+Content-Type: application/json
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE1MzE0OGNmNDczZmMzN2MyMTBkODYiLCJpc0J1c2luZXNzIjpmYWxzZSwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA1MzI0OTU4fQ.7wQeBHqbqDRMxMfwgv55Kp0DhvdjQdL-HvTuEXZ_Rw8
+
+{
+  "phone": "050222222"
+}
+
+###
+PATCH {{local}}/api/users/65a4ee5dee23f91ce3bb97b7
+Content-Type: application/json
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE0ZTdkOGRjNTc4OTZiZGY1ODljOWQiLCJpc0J1c2luZXNzIjpmYWxzZSwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA1MzA2NzYxfQ.0XGZ2R7EwYmbkcw3Y9ETBr3BhPo7Dha9R_XaDOClZPQ
+
+{
+  "isBusiness": false
+}
+
+###
+
+PATCH {{local}}/api/users/admin/65a4ee5dee23f91ce3bb97b7
+Content-Type: application/json
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE0ZWU1ZGVlMjNmOTFjZTNiYjk3YjciLCJpc0J1c2luZXNzIjpmYWxzZSwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA1MzA3NzQ2fQ.2DKmxRlv3qy_PZHMPRG4FF6oBywiiwavYyCc-5AIVhg
+
+{
+  "isAdmin": true
+}
+
+###
+DELETE {{local}}/api/users/65a4e7d8dc57896bdf589c9d
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE0ZWU1ZGVlMjNmOTFjZTNiYjk3YjciLCJpc0J1c2luZXNzIjpmYWxzZSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTcwNTMxMDYxOX0.XwGE_nw2osNXJP1BkDL9R1SIqIoV1r-SOUA59KjXvCo
+
+
+//cards
+
+###
+POST {{local}}/api/cards
+Content-Type: application/json
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWFjZmFjYTM5M2RhOTBjNmUyYjM1M2YiLCJpc0J1c2luZXNzIjp0cnVlLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzA1ODM1MjE2fQ.4696YQak1MJOKBwnPzyxCZRSjA55P-hWgVpJgVWXA_c
+
+ {
+      "title": "קוקוק",
+      "subtitle": "this is the second card",
+      "description": "this is the second card in the database",
+      "phone": "050-8888888",
+      "email": "secdondcasrd@gmail.com",
+      "category":"כיפות",
+      "user_id":"",
+      "bizNumber":"",
+      "web": "https://www.secondcard.co.il",
+      "image": {
+        "url": "https://cdn.pixabay.com/photo/2023/12/12/15/47/yellow-mongoose-8445457_640.jpg",
+        "alt": "img"
+      },
+      "address": {
+        "state": "",
+        "country": "test",
+        "city": "test",
+        "street": "test",
+        "houseNumber": "22",
+        "zip": "0"
+      }
+
+    }
+
+###
+GET {{local}}/api/cards
+
+###
+GET {{local}}/api/cards/65a3b94f18af7b02e5f43694
+         
+###
+DELETE {{local}}/api/cards/65a4d520a139144a6a272d5a
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWEzYmI2YmEwMjgwNjM0MmU4NWJhMmEiLCJpc0J1c2luZXNzIjp0cnVlLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzA1MjM4MDU4fQ.6GWX_iup_A5CVjWkYNslwxbMVqzAgiCtOIX4pj3ZwpQ
+
+###
+GET {{local}}/api/cards/my-cards
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE0ZmI0NjJiZGJjZmJhZjM0OGIwOGEiLCJpc0J1c2luZXNzIjp0cnVlLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzA1MzExMDUxfQ.9zJPtKD5swSYQ2SKKjVV1ylF6teh_fXNFawC88jlLDs
+
+###
+PATCH  {{local}}/api/cards/65a4d520a139144a6a272d5a
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWEzYmI2YmEwMjgwNjM0MmU4NWJhMmEiLCJpc0J1c2luZXNzIjp0cnVlLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzA1MjM4MDU4fQ.6GWX_iup_A5CVjWkYNslwxbMVqzAgiCtOIX4pj3ZwpQ
+
+###
+PUT  {{local}}/api/cards/edit/65a4fb612bdbcfbaf348b090
+Content-Type: application/json
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE0ZmI0NjJiZGJjZmJhZjM0OGIwOGEiLCJpc0J1c2luZXNzIjp0cnVlLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzA1MzExMDUxfQ.9zJPtKD5swSYQ2SKKjVV1ylF6teh_fXNFawC88jlLDs
+
+{
+  "address": {
+    "country": "המדינה החדשה",
+    "city": "העיר החדשה",
+    "street": "רחוב החדש",
+    "houseNumber": 11111
+  }
+}
+
+###
+PUT {{local}}/api/cards/editBiz/65a4d520a139144a6a272d5a
+Content-Type: application/json
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE1MzE0OGNmNDczZmMzN2MyMTBkODYiLCJpc0J1c2luZXNzIjpmYWxzZSwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA1MzI0OTU4fQ.7wQeBHqbqDRMxMfwgv55Kp0DhvdjQdL-HvTuEXZ_Rw8
+
+{
+  "bizNumber":3232
+}
+
+
+# ------------------------------------------
+# ניהול קטגוריות
+###
+POST {{local}}/api/categories
+Content-Type: application/json
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWFkMjM4ZmZjZjZiOThhNzgxNzM4OWMiLCJpc0J1c2luZXNzIjpmYWxzZSwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA1ODQ1ODAxfQ.bAisFdRDEAkh-UDkDFjKuatgBv9LCtWAHzW1c5L07hM
+
+
+{
+  "name": "בלה"
+}
+
+###
+GET {{local}}/api/categories
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWFkMjM4ZmZjZjZiOThhNzgxNzM4OWMiLCJpc0J1c2luZXNzIjpmYWxzZSwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA1ODQ1ODAxfQ.bAisFdRDEAkh-UDkDFjKuatgBv9LCtWAHzW1c5L07hM
+
+###
+
+DELETE {{local}}/api/categories/65ad31d52c033978e271bc88
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWFkMjM4ZmZjZjZiOThhNzgxNzM4OWMiLCJpc0J1c2luZXNzIjpmYWxzZSwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA1ODQ1ODAxfQ.bAisFdRDEAkh-UDkDFjKuatgBv9LCtWAHzW1c5L07hM
+
+###
+GET {{local}}/api/categories/כיפות/productsCount
+x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWFkMjM4ZmZjZjZiOThhNzgxNzM4OWMiLCJpc0J1c2luZXNzIjpmYWxzZSwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA1ODQ1ODAxfQ.bAisFdRDEAkh-UDkDFjKuatgBv9LCtWAHzW1c5L07hM
+
+# ------------------------------------------
