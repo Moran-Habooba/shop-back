@@ -95,6 +95,48 @@ const cancelCart = async (req, res) => {
   res.status(200).json({ message: "Cart has been cancelled", cart });
 };
 
+// const updateCart = async (req, res) => {
+//   console.log("Received update cart request:", req.body);
+//   if (!req.user) {
+//     return res.status(401).json({ message: "User not logged in" });
+//   }
+
+//   const user_id = req.user._id;
+//   const { itemsToUpdate } = req.body;
+
+//   let cart = await Cart.findOne({ user_id, status: "pending" });
+
+//   if (!cart) {
+//     return res.status(400).json({ message: "No pending cart found" });
+//   }
+
+//   itemsToUpdate.forEach((itemUpdate) => {
+//     console.log(
+//       `Updating item ${itemUpdate.card_id} to quantity ${itemUpdate.quantity}`
+//     );
+
+//     const itemIndex = cart.items.findIndex(
+//       (item) => item.card_id.toString() === itemUpdate.card_id
+//     );
+
+//     if (itemIndex > -1) {
+//       if (itemUpdate.quantity <= 0) {
+//         cart.items.splice(itemIndex, 1);
+//       } else {
+//         cart.items[itemIndex].quantity = itemUpdate.quantity;
+//       }
+//     }
+//   });
+
+//   await cart.save();
+
+//   cart = await Cart.findOne({ user_id }).populate({
+//     path: "items.card_id",
+//     model: "Card",
+//   });
+
+//   res.status(200).json({ message: "Cart updated successfully", cart });
+// };
 const updateCart = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: "User not logged in" });
@@ -111,15 +153,17 @@ const updateCart = async (req, res) => {
 
   itemsToUpdate.forEach((itemUpdate) => {
     const itemIndex = cart.items.findIndex(
-      (item) => item.card_id.toString() === itemUpdate.card_id
+      (item) => item.card_id.toString() === itemUpdate.id
     );
 
     if (itemIndex > -1) {
-      if (itemUpdate.quantity <= 0) {
+      const updatedQuantity = parseInt(itemUpdate.quantity);
+      if (updatedQuantity <= 0) {
         cart.items.splice(itemIndex, 1);
       } else {
-        cart.items[itemIndex].quantity = itemUpdate.quantity;
+        cart.items[itemIndex].quantity = updatedQuantity;
       }
+    } else {
     }
   });
 
@@ -151,10 +195,47 @@ const completeOrder = async (req, res) => {
   res.status(200).json({ message: "Order completed successfully", cart });
 };
 
+const removeFromCart = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "User not logged in" });
+  }
+
+  const user_id = req.user._id;
+  const card_id = req.params.card_id;
+
+  let cart = await Cart.findOne({ user_id, status: "pending" });
+
+  if (!cart) {
+    return res.status(400).json({ message: "No pending cart found" });
+  }
+
+  const itemIndex = cart.items.findIndex(
+    (item) => item.card_id.toString() === card_id
+  );
+
+  if (itemIndex > -1) {
+    cart.items.splice(itemIndex, 1);
+  } else {
+    return res.status(404).json({ message: "Item not found in the cart" });
+  }
+
+  await cart.save();
+
+  cart = await Cart.findOne({ user_id }).populate({
+    path: "items.card_id",
+    model: "Card",
+  });
+
+  res
+    .status(200)
+    .json({ message: "Item removed from the cart successfully", cart });
+};
+
 module.exports = {
   addToCart,
   cancelCart,
   updateCart,
   completeOrder,
   getCartItems,
+  removeFromCart,
 };
