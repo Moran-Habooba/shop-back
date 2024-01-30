@@ -5,11 +5,11 @@ const _ = require("lodash");
 const multer = require("multer");
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function (req, image_file, cb) {
     cb(null, "uploads/");
   },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
+  filename: function (req, image_file, cb) {
+    cb(null, Date.now() + "-" + image_file.originalname);
   },
 });
 
@@ -57,13 +57,16 @@ async function addUser(req, res) {
       return res.status(400).send("User already registered");
     }
 
-    // טיפול בקובץ כאן
     const imagePath = req.file ? req.file.path : null;
+
+    console.log("req.image_file:", req.image_file);
 
     const newUser = new User({
       ...req.body,
       password: await bcrypt.hash(req.body.password, 12),
-      imagePath: imagePath, // שמור את הנתיב לקובץ אם קיים
+      image_file: {
+        path: imagePath,
+      },
     });
 
     await newUser.save();

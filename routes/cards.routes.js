@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const { authorize } = require("../middleware/auth.mw");
+const upload = require("../controllers/users.controller").upload;
+
 const {
   addCard,
   getAllCards,
@@ -18,13 +20,15 @@ function businessOnly(req, res, next) {
   }
   next();
 }
-router.post("/", authorize, addCard);
+router.post("/", authorize, upload.single("image_file"), addCard);
 router.get("/", getAllCards);
-router.get("/my-cards", authorize, businessOnly, getMyCards);
+router.get("/my-cards", authorize, getMyCards);
 router.get("/:id", getCardById);
 router.delete("/:id", authorize, deleteCard);
 router.patch("/:id", authorize, likeCard);
-router.put("/edit/:id", authorize, editCardById);
+// router.put("/edit/:id", authorize, editCardById);
+router.put("/edit/:id", authorize, upload.single("image_file"), editCardById);
+
 router.patch("/editBiz/:id", authorize, editBizNumberByAdmin);
 router.get("/biz-number/:id", authorize, getCardByBizNumber);
 

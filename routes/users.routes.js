@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const { User, validateUser } = require("../models/users.model");
-const multer = require("multer");
 const upload = require("../controllers/users.controller").upload;
 
 const _ = require("lodash");
@@ -21,7 +20,7 @@ router.get("/me", authorize, async (req, res) => {
   res.json(user);
 });
 
-router.post("/", upload.single("image"), addUser);
+router.post("/", upload.single("image_file"), addUser);
 router.get("/", authorize, getAllUsers);
 
 router.get("/:id", authorize, getUserById);

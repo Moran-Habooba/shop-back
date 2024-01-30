@@ -58,10 +58,22 @@ const getProductsCountInCategory = async (req, res) => {
     res.status(500).send("Error: " + error.message);
   }
 };
+const getProductsByCategory = async (req, res) => {
+  try {
+    const categoryName = req.params.categoryName;
+
+    const products = await Card.find({ category: categoryName });
+
+    res.send(products);
+  } catch (error) {
+    res.status(500).send("Error: " + error.message);
+  }
+};
 
 module.exports = {
   addCategory,
   removeCategory,
   getAllCategories,
   getProductsCountInCategory,
+  getProductsByCategory,
 };

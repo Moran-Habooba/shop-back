@@ -7,16 +7,18 @@ const {
   removeCategory,
   getAllCategories,
   getProductsCountInCategory,
+  getProductsByCategory,
 } = require("../controllers/categories.controller");
 
 router.post("/", authorize, checkAdminPermission, addCategory);
-router.get("/", authorize, checkAdminPermission, getAllCategories);
+router.get("/", authorize, getAllCategories);
 router.get(
   "/:categoryName/productsCount",
   authorize,
   checkAdminPermission,
   getProductsCountInCategory
 );
+router.get("/:categoryName/products", getProductsByCategory);
 router.delete("/:id", authorize, checkAdminPermission, removeCategory);
 
 module.exports = router;

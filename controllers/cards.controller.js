@@ -1,6 +1,7 @@
 const { Card, validateCard } = require("../models/cards.model");
 const { generateRandomBizNumber } = require("../utils/generateRandomBizNumber");
 const mongoose = require("mongoose");
+const multer = require("multer");
 
 // async function addCard(req, res) {
 //   const { error } = validateCard(req.body);
@@ -20,24 +21,50 @@ const mongoose = require("mongoose");
 //     res.status(500).send("Error: " + err.message);
 //   }
 // }
+function sanitizeFileName(filename) {
+  return filename.replace(/[^\w\d. -]/g, "_");
+}
+
+const storage = multer.diskStorage({
+  destination: function (req, image_file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, image_file, cb) {
+    console.log("Original filename:", image_file.originalname);
+
+    const cleanFileName = sanitizeFileName(image_file.originalname);
+    console.log("Original filename:", image_file.originalname);
+
+    cb(null, Date.now() + "-" + cleanFileName);
+  },
+});
+
 async function addCard(req, res) {
   if (!req.user.isAdmin) {
     return res.status(403).send("Access denied. Only admins can create cards.");
   }
+
   const { error } = validateCard(req.body);
   if (error) return res.status(400).send(error.details[0].message);
+
   try {
     const randomBizNumber = generateRandomBizNumber();
-    const userId = req.user._id;
-    const categoryName = req.body.category;
     let card = new Card({
       ...req.body,
       bizNumber: randomBizNumber,
-      user_id: userId,
-      category: categoryName,
+      user_id: req.user._id,
+      category: req.body.category.toLowerCase().trim(),
     });
-    card.user_id = userId;
+
+    if (req.file) {
+      card.image_file = {
+        path: req.file.path,
+        originalname: req.file.originalname,
+      };
+    }
+
     card = await card.save();
+
     res.send(card);
   } catch (err) {
     res.status(500).send("Error: " + err.message);
@@ -97,8 +124,10 @@ async function deleteCard(req, res) {
 }
 const getMyCards = async (req, res) => {
   try {
-    if (!req.user || !req.user._id) {
-      return res.status(401).send("User is not authorized or not found.");
+    if (!req.user.isAdmin) {
+      return res
+        .status(403)
+        .send("Access denied. Only admins can create cards.");
     }
     const userId = req.user._id;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -141,23 +170,54 @@ async function likeCard(req, res) {
   }
 }
 
+//////////////////////////////////
+// const editCardById = async (req, res) => {
+//   try {
+//     const cardId = req.params.id;
+
+//     console.log("Updating card with ID:", cardId);
+//     console.log("Data received for update:", req.body);
+
+//     if (!req.user.isAdmin) {
+//       return res.status(403).send("Access denied. Only admins can edit cards.");
+//     }
+
+//     const updatedCard = await Card.findByIdAndUpdate(cardId, req.body, {
+//       new: true,
+//     });
+
+//     console.log("Updated card:", updatedCard);
+
+//     res.send(updatedCard);
+//   } catch (error) {
+//     res.status(500).send("Error: " + error.message);
+//   }
+// };
 const editCardById = async (req, res) => {
   try {
-    const userId = req.user._id;
     const cardId = req.params.id;
 
-    const card = await Card.findOne({ _id: cardId, user_id: userId });
-    if (!card) {
-      return res
-        .status(403)
-        .send(
-          "You do not have permission to edit this card.Only the user who created the card can edit it"
-        );
+    console.log("Updating card with ID:", cardId);
+    console.log("Data received for update:", req.body);
+
+    if (!req.user.isAdmin) {
+      return res.status(403).send("Access denied. Only admins can edit cards.");
     }
 
-    const updatedCard = await Card.findByIdAndUpdate(cardId, req.body, {
+    const updates = { ...req.body };
+
+    if (req.file) {
+      updates.image_file = {
+        path: req.file.path.replace(/\\/g, "/"),
+        originalname: req.file.originalname,
+      };
+    }
+
+    const updatedCard = await Card.findByIdAndUpdate(cardId, updates, {
       new: true,
     });
+
+    console.log("Updated card:", updatedCard);
 
     res.send(updatedCard);
   } catch (error) {
