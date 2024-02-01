@@ -7,7 +7,6 @@ const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema(
   {
-    // name: nameSchema,
     first_name: {
       type: String,
       required: true,
@@ -21,7 +20,7 @@ const userSchema = new mongoose.Schema(
       minlength: 2,
       maxlength: 1000,
     },
-    // address: addressSchema,
+
     country: {
       type: String,
       minLength: 2,
@@ -89,7 +88,7 @@ const userSchema = new mongoose.Schema(
 
     isBusiness: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     isAdmin: {
       type: Boolean,
@@ -119,7 +118,8 @@ const userSchema = new mongoose.Schema(
       generateAuthToken() {
         return jwt.sign(
           { _id: this._id, isBusiness: this.isBusiness, isAdmin: this.isAdmin },
-          process.env.JWT_SECRET
+          process.env.JWT_SECRET,
+          { expiresIn: "4h" }
         );
       },
     },
@@ -147,38 +147,13 @@ userSchema.methods.resetLoginAttempts = function () {
 
 function validateUser(user) {
   const schema = Joi.object({
-    // name: Joi.object({
-    //   first: Joi.string().min(2).max(255).required(),
-    //   // middle: Joi.string().min(2).max(255),
-    //   last: Joi.string().min(2).max(255).required(),
-    // }).required(),
     first_name: Joi.string().min(2).max(1000).required(),
     last_name: Joi.string().min(2).max(1000).required(),
-    // address: Joi.object({
-    //   // state: Joi.string().min(2).max(255),
-    //   country: Joi.string().min(2).max(255),
-    //   city: Joi.string().min(2).max(255),
-    //   street: Joi.string().min(2).max(255),
-    //   houseNumber: Joi.number().min(1).max(50),
-    //   zip: Joi.number().min(1).max(20),
-    // }).required(),
     country: Joi.string().min(2).max(256).required(),
     city: Joi.string().min(2).max(256).required(),
     street: Joi.string().min(2).max(256).required(),
     houseNumber: Joi.number().min(1).max(50).required(),
     zip: Joi.number().min(1).max(20).required(),
-
-    // image: Joi.object({
-    //   url: Joi.string()
-    //     .uri()
-    //     .allow("")
-    //     .pattern(
-    //       /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/
-    //     )
-    //     .optional(),
-    //   alt: Joi.string().min(2).max(255).allow("").optional(),
-    //   file: Joi.any().optional(),
-    // }).optional(),
     image_file: Joi.any().optional(),
     email: Joi.string()
       .pattern(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/)

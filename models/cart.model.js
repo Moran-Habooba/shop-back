@@ -10,7 +10,7 @@ const cartSchema = new mongoose.Schema({
   status: {
     type: String,
     default: "pending",
-    enum: ["pending", "closed", "cancelled"],
+    enum: ["pending", "closed", "cancelled", "completed"],
   },
   items: [
     {
@@ -30,7 +30,7 @@ const validateCart = (cart) => {
     user_id: Joi.string().allow(""),
 
     status: Joi.string()
-      .valid("pending", "closed", "cancelled")
+      .valid("pending", "closed", "cancelled", "completed")
       .default("pending"),
     items: Joi.array().items(
       Joi.object({

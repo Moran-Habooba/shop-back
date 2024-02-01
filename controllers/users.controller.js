@@ -67,6 +67,7 @@ async function addUser(req, res) {
       image_file: {
         path: imagePath,
       },
+      isBusiness: true,
     });
 
     await newUser.save();
@@ -123,6 +124,7 @@ async function editUser(req, res) {
   try {
     const userId = req.params.id;
     const requestingUser = req.user;
+    const imagePath = req.file ? req.file.path : null;
 
     if (!requestingUser || requestingUser._id !== userId) {
       return res
@@ -140,6 +142,10 @@ async function editUser(req, res) {
     delete updateData.isAdmin;
     delete updateData.email;
     delete updateData.password;
+    delete updateData.isBusiness;
+    if (imagePath) {
+      updateData.image_file = { path: imagePath };
+    }
 
     const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
       new: true,

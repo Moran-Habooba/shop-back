@@ -24,7 +24,7 @@ router.post("/", upload.single("image_file"), addUser);
 router.get("/", authorize, getAllUsers);
 
 router.get("/:id", authorize, getUserById);
-router.put("/edit/:id", authorize, editUser);
+router.put("/edit/:id", authorize, upload.single("image_file"), editUser);
 router.patch("/:id", authorize, changeUserStatus);
 // router.patch("/admin/:id", authorize, promoteUserToAdmin);
 router.delete("/:id", authorize, deleteUserById);
