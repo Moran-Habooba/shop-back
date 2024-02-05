@@ -31,14 +31,7 @@ const orderSchema = new mongoose.Schema({
         ref: "Card",
         required: true,
       },
-      // title: {
-      //   type: String,
-      //   required: true,
-      //   minLength: 2,
-      //   maxLength: 256,
-      //   trim: true,
-      //   lowercase: true,
-      // },
+
       quantity: {
         type: Number,
         required: true,
@@ -59,7 +52,6 @@ const validateOrder = (order) => {
       .default("pending"),
     items: orderedItems.map((item) => ({
       card_id: item.card_id._id,
-      // title: item.card_id.title,
       quantity: item.quantity,
     })),
   });

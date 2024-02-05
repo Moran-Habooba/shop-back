@@ -34,6 +34,7 @@ const addToCart = async (req, res) => {
       cart = new Cart({
         user_id,
         items: [{ card_id, quantity }],
+        status: "pending",
       });
       await cart.save();
     }
@@ -55,31 +56,6 @@ const addToCart = async (req, res) => {
   }
 };
 
-// const getCartItems = async (req, res) => {
-//   try {
-//     if (!req.user) {
-//       return res.status(401).json({ message: "User not logged in" });
-//     }
-
-//     const user_id = req.user._id;
-
-//     const cart = await Cart.findOne({ user_id }).populate({
-//       path: "items.card_id",
-//       model: "Card",
-//     });
-
-//     if (!cart) {
-//       return res.status(400).json({ message: "No cart found" });
-//     }
-
-//     res.status(200).json({ cart: cart });
-//   } catch (error) {
-//     console.error(error);
-//     return res
-//       .status(500)
-//       .json({ message: "Error occurred while fetching cart items" });
-//   }
-// };
 const getCartItems = async (req, res) => {
   try {
     const user_id = req.user._id;
@@ -160,6 +136,43 @@ const updateCart = async (req, res) => {
   res.status(200).json({ message: "Cart updated successfully", cart });
 };
 
+// const completeOrder = async (req, res) => {
+//   if (!req.user) {
+//     return res.status(401).json({ message: "User not logged in" });
+//   }
+
+//   const user_id = req.user._id;
+
+//   try {
+//     const newOrder = new Order({
+//       user_id: user_id,
+//       orderNumber: generateRandomBizNumber(),
+//       status: "pending",
+//     });
+
+//     await newOrder.save();
+
+//     await Cart.findOneAndDelete({ user_id, status: "pending" });
+
+//     const cart = new Cart({
+//       user_id,
+//       items: [],
+//       status: "pending",
+//     });
+
+//     await cart.save();
+
+//     res
+//       .status(200)
+//       .json({ message: "Order created successfully", order: newOrder });
+//   } catch (error) {
+//     console.error(error);
+//     res
+//       .status(500)
+//       .json({ message: "Error occurred while creating the order" });
+//   }
+// };
+
 const completeOrder = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: "User not logged in" });
@@ -176,19 +189,21 @@ const completeOrder = async (req, res) => {
 
     await newOrder.save();
 
-    await Cart.findOneAndDelete({ user_id, status: "pending" });
+    const cart = await Cart.findOneAndUpdate(
+      { user_id, status: "pending" },
+      { status: "completed" },
+      { new: true }
+    );
 
-    const cart = new Cart({
-      user_id,
-      items: [],
-      status: "pending",
-    });
+    newOrder.status = "close";
+    await newOrder.save();
 
+    cart.items = [];
     await cart.save();
-
-    res
-      .status(200)
-      .json({ message: "Order created successfully", order: newOrder });
+    res.status(200).json({
+      message: "Order created and closed successfully",
+      order: newOrder,
+    });
   } catch (error) {
     console.error(error);
     res
@@ -289,6 +304,25 @@ const getMyOrders = async (req, res) => {
     res.status(500).json({ message: "Error retrieving orders", error });
   }
 };
+const getAllClosedOrders = async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(403).send("Access denied. Only admins can create cards.");
+  }
+  try {
+    const closedOrders = await Order.find({ status: "close" }).sort({
+      createdAt: -1,
+    });
+
+    if (!closedOrders.length) {
+      return res.status(404).json({ message: "No closed orders found" });
+    }
+
+    res.json({ closedOrders });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving closed orders", error });
+  }
+};
 
 module.exports = {
   addToCart,
@@ -299,4 +333,5 @@ module.exports = {
   removeFromCart,
   createOrderFromCart,
   getMyOrders,
+  getAllClosedOrders,
 };

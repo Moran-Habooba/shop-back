@@ -9,6 +9,7 @@ const {
   removeFromCart,
   createOrderFromCart,
   getMyOrders,
+  getAllClosedOrders,
 } = require("../controllers/cart.controller");
 
 router.post("/", authorize, addToCart);
@@ -19,5 +20,6 @@ router.post("/cancel", authorize, cancelCart);
 router.put("/update", authorize, updateCart);
 router.post("/complete", authorize, completeOrder);
 router.delete("/remove/:card_id", authorize, removeFromCart);
+router.get("/orders/closed", authorize, getAllClosedOrders);
 
 module.exports = router;

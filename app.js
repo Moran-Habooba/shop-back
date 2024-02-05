@@ -47,6 +47,7 @@ app.use("/api/login", require("./routes/auth.routes"));
 app.use("/api/cards", require("./routes/cards.routes"));
 app.use("/api/categories", require("./routes/categories.routes"));
 app.use("/api/cart", require("./routes/cart.routes"));
+app.use("/api/inventoryItem", require("./routes/inventoryItem.routes"));
 
 app.use((req, res) => {
   res.status(404).send("Page Not Found");
