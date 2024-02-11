@@ -13,6 +13,7 @@ const {
   deleteUserById,
   // promoteUserToAdmin,
   changeUserStatus,
+  resetPassword,
 } = require("../controllers/users.controller");
 
 router.get("/me", authorize, async (req, res) => {
@@ -21,6 +22,7 @@ router.get("/me", authorize, async (req, res) => {
 });
 
 router.post("/", upload.single("image_file"), addUser);
+router.post("/emailVerification", resetPassword);
 router.get("/", authorize, getAllUsers);
 
 router.get("/:id", authorize, getUserById);

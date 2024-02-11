@@ -3,7 +3,7 @@ const { User, validateUser } = require("../models/users.model");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
 const multer = require("multer");
-
+const nodemailer = require("nodemailer");
 const storage = multer.diskStorage({
   destination: function (req, image_file, cb) {
     cb(null, "uploads/");
@@ -143,8 +143,13 @@ async function editUser(req, res) {
     delete updateData.email;
     delete updateData.password;
     delete updateData.isBusiness;
-    if (imagePath) {
+    // if (imagePath) {
+    //   updateData.image_file = { path: imagePath };
+    // }
+    if (imagePath !== null) {
       updateData.image_file = { path: imagePath };
+    } else {
+      updateData.image_file = userToUpdate.image_file;
     }
 
     const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
@@ -269,6 +274,65 @@ async function changeUserStatus(req, res) {
   }
 }
 
+//////איפוס סיסמא
+
+const resetPassword = async (req, res) => {
+  const { email, newPassword } = req.body;
+  console.log("Email:", email, "New Password:", newPassword);
+  if (!email || typeof email !== "string") {
+    return res.status(400).send("Invalid email address.");
+  }
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    user.password = hashedPassword;
+    await user.save();
+
+    // שליחת אימייל למשתמש עם הקישור לאיפוס הסיסמה
+    const resetLink = "http://localhost:3001/resetPassword";
+    const subject = "איפוס סיסמא לאתר תורתך שעשועי";
+    const text = `לחץ כאן לאיפוס הסיסמא שלך: ${resetLink}`;
+    await sendEmail(email, subject, text);
+
+    return res.status(200).send("Password reset successfully");
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    return res.status(500).send("Internal Server Error");
+  }
+};
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  service: "gmail",
+  auth: {
+    user: "habooba1818@gmail.com",
+    pass: "pbyi bdpx xfki vwqo",
+  },
+});
+
+async function sendEmail(email, subject, text) {
+  try {
+    const mailOptions = {
+      from: "habooba1818@gmail.com",
+      to: email,
+      subject: subject,
+      text: text,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent:", info.response);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+}
 module.exports = {
   addUser,
   getAllUsers,
@@ -279,4 +343,5 @@ module.exports = {
   // promoteUserToAdmin,
   changeUserStatus,
   upload,
+  resetPassword,
 };

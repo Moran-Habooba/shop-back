@@ -23,7 +23,30 @@ const orderSchema = new mongoose.Schema({
     enum: ["pending", "completed", "cancelled", "close"],
     default: "pending",
   },
-
+  city: {
+    type: String,
+    minLength: 2,
+    maxLength: 256,
+    trim: true,
+    lowercase: true,
+    default: "",
+    required: true,
+  },
+  street: {
+    type: String,
+    minLength: 2,
+    maxLength: 256,
+    trim: true,
+    lowercase: true,
+    default: "",
+    required: true,
+  },
+  houseNumber: {
+    type: Number,
+    required: true,
+    trim: true,
+    minLength: 1,
+  },
   items: [
     {
       card_id: {
@@ -46,7 +69,9 @@ const validateOrder = (order) => {
   const schema = Joi.object({
     user_id: Joi.string().allow(""),
     orderNumber: Joi.string().min(5).max(5).required(),
-
+    city: Joi.string().min(2).max(256).required(),
+    street: Joi.string().min(2).max(256).required(),
+    houseNumber: Joi.number().min(1).max(50).required(),
     status: Joi.string()
       .valid("pending", "close", "cancelled", "completed")
       .default("pending"),

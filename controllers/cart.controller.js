@@ -5,6 +5,8 @@ const { generateRandomBizNumber } = require("../utils/generateRandomBizNumber");
 
 const addToCart = async (req, res) => {
   try {
+    console.log("Request to add to cart:", req.body);
+
     const { card_id, quantity } = req.body;
     if (!card_id) {
       return res.status(400).json({ message: "Invalid card_id" });
@@ -43,6 +45,7 @@ const addToCart = async (req, res) => {
       path: "items.card_id",
       model: "Card",
     });
+    // console.log("Cart with populated items:", JSON.stringify(cart, null, 2));
 
     return res.status(200).json({
       message: "The product has been added to the cart successfully",
@@ -104,7 +107,7 @@ const updateCart = async (req, res) => {
   const user_id = req.user._id;
   const { itemsToUpdate } = req.body;
 
-  let cart = await Cart.findOne({ user_id, status: "pending" });
+  let cart = await Cart.findOne({ user_id, status: "completed" });
 
   if (!cart) {
     return res.status(400).json({ message: "No pending cart found" });
@@ -179,18 +182,27 @@ const completeOrder = async (req, res) => {
   }
 
   const user_id = req.user._id;
+  console.log("Receiving order details:", req.body);
+  const { city, street, houseNumber } = req.body;
+  console.log(
+    `Order Details - City: ${city}, Street: ${street}, HouseNumber: ${houseNumber}, 
+    )}`
+  );
 
   try {
     const newOrder = new Order({
       user_id: user_id,
       orderNumber: generateRandomBizNumber(),
       status: "pending",
+      city,
+      street,
+      houseNumber,
     });
 
     await newOrder.save();
 
     const cart = await Cart.findOneAndUpdate(
-      { user_id, status: "pending" },
+      { user_id, status: "completed" },
       { status: "completed" },
       { new: true }
     );
@@ -220,7 +232,7 @@ const removeFromCart = async (req, res) => {
   const user_id = req.user._id;
   const card_id = req.params.card_id;
 
-  let cart = await Cart.findOne({ user_id, status: "pending" });
+  let cart = await Cart.findOne({ user_id, status: "completed" });
 
   if (!cart) {
     return res.status(400).json({ message: "No pending cart found" });
@@ -266,6 +278,7 @@ const createOrderFromCart = async (req, res) => {
     user_id: user_id,
     orderNumber: generateRandomBizNumber(),
     status: "pending",
+
     items: [
       {
         card_id: card_id,

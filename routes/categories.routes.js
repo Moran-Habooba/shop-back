@@ -11,7 +11,7 @@ const {
 } = require("../controllers/categories.controller");
 
 router.post("/", authorize, checkAdminPermission, addCategory);
-router.get("/", authorize, getAllCategories);
+router.get("/", getAllCategories);
 router.get(
   "/:categoryName/productsCount",
   authorize,

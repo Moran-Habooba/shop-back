@@ -57,11 +57,10 @@ const userSchema = new mongoose.Schema(
     zip: {
       type: Number,
       trim: true,
-      minLength: 4,
+      minLength: 5,
       default: 0,
     },
 
-    // image: imageSchema,
     image_file: {
       path: String,
       originalname: String,
@@ -112,6 +111,14 @@ const userSchema = new mongoose.Schema(
     lockUntil: {
       type: Date,
     },
+    requestCount: {
+      type: Number,
+      default: 0,
+    },
+    requestResetTime: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     methods: {
@@ -145,6 +152,35 @@ userSchema.methods.resetLoginAttempts = function () {
   return this.save();
 };
 
+async function canMakeRequests(u) {
+  const now = new Date();
+  console.log(
+    `Current Time: ${now}, Reset Time: ${u.requestResetTime}, Request Count: ${u.requestCount}`
+  );
+
+  if (u.requestResetTime < now) {
+    console.log("Resetting request count and time.");
+
+    u.requestCount = 0;
+    u.requestResetTime = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    await u.save();
+    return true;
+    // לשנות פה ל100 בקשות
+  } else if (u.requestCount < 5000) {
+    u.requestCount += 1;
+    await u.save();
+    return true;
+  } else {
+    return false;
+  }
+}
+
+userSchema.methods.resetRequestCount = function () {
+  this.requestCount = 0;
+  this.requestResetTime = Date.now();
+  return this.save();
+};
+
 function validateUser(user) {
   const schema = Joi.object({
     first_name: Joi.string().min(2).max(1000).required(),
@@ -153,7 +189,8 @@ function validateUser(user) {
     city: Joi.string().min(2).max(256).required(),
     street: Joi.string().min(2).max(256).required(),
     houseNumber: Joi.number().min(1).max(50).required(),
-    zip: Joi.number().min(1).max(20).required(),
+    // zip: Joi.number().min(1).max(20).required(),
+    zip: Joi.number().min(1).max(99999999).integer().required(),
     image_file: Joi.any().optional(),
     email: Joi.string()
       .pattern(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/)
@@ -181,4 +218,5 @@ function validateUser(user) {
 module.exports = {
   User,
   validateUser,
+  canMakeRequests,
 };
