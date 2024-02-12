@@ -1,18 +1,20 @@
 {
   "users": [
     {
-      "name": { "first": "regular", "last": "user" },
+      " first_name": "regular",
+      " last_name": "user",
       "isBusiness": false,
-      "phone": "050-7777777",
+      "phone": "0507777777",
       "email": "regular@gmail.com",
       "password": "Mm123456!",
-      "address": {
-        "country": "israel",
-        "city": "tel-aviv",
-        "street": "bla",
-        "houseNumber": "8"
-      },
-      "image": { "url": "", "alt": "" }
+      "country": "Wonderland",
+      "city": "Rabbit Hole",
+      "street": "Tea Party Lane",
+      "houseNumber": 2,
+      "zip": "12345",
+      "image_file": {
+        "path": ""
+      }
     },
     {
       "name": { "first": "business", "last": "user" },
