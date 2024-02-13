@@ -13,108 +13,82 @@
       "houseNumber": 2,
       "zip": "12345",
       "image_file": {
-        "path": ""
+        "path": "uploads/1707808846960-profile4.jpeg"
       }
     },
     {
-      "name": { "first": "business", "last": "user" },
+      " first_name": "business",
+      " last_name": "user",
       "isBusiness": true,
-
-      "phone": "050-7777777",
+      "phone": "0507777777",
       "email": "business@gmail.com",
       "password": "Mm123456!",
-      "address": {
-        "country": "israel",
-        "city": "tel-aviv",
-        "street": "bla",
-        "houseNumber": "8"
-      },
-      "image": { "url": "", "alt": "" }
+      "country": "Wonderland",
+      "city": "Rabbit Hole",
+      "street": "Tea Party Lane",
+      "houseNumber": 2,
+      "zip": "12345",
+      "image_file": {
+        "path": "uploads/1707808846960-profile4.jpeg"
+      }
     },
     {
-      "name": { "first": "admin", "last": "user" },
+      " first_name": "admin",
+      " last_name": "user",
       "isBusiness": false,
-
       "isAdmin": true,
-      "phone": "050-7777777",
+      "phone": "0507777777",
       "email": "admin@gmail.com",
       "password": "Abc!123Abc",
-      "address": {
-        "country": "israel",
-        "city": "tel-aviv",
-        "street": "bla",
-        "houseNumber": "8"
-      },
-      "image": { "url": "", "alt": "" }
+      "country": "Wonderland",
+      "city": "Rabbit Hole",
+      "street": "Tea Party Lane",
+      "houseNumber": 2,
+      "zip": "12345",
+      "image_file": {
+        "path": "uploads/1707808846960-profile4.jpeg"
+      }
     }
   ],
   "cards": [
     {
       "bizNumber": 1111111,
       "title": "first card",
-      "subtitle": "this is the first card",
       "description": "this is the first card in the database",
-      "phone": "050-8888888",
-      "email": "firstCard@gmail.com",
+      "price": "50",
       "user_id": "6376274068d78742d84f31d2",
-      "web": "https://www.firstCard.co.il",
-      "image": {
-        "url": "",
-        "alt": ""
+      "image_file": {
+        "path": "uploads/1707734439263-Sabbath6.jpg",
+        "originalname": "Sabbath6.jpg"
       },
-      "address": {
-        "state": "",
-        "country": "test",
-        "city": "test",
-        "street": "test",
-        "houseNumber": "4",
-        "zip": "0"
-      }
+      "quantity": 10,
+      "category": "שבת"
     },
     {
-      "title": "second card",
       "bizNumber": 2222222,
-
-      "subtitle": "this is the second card",
+      "title": "second card",
       "description": "this is the second card in the database",
-      "phone": "050-8888888",
-      "email": "secondCard@gmail.com",
+      "price": "50",
       "user_id": "6376274068d78742d84f31d2",
-      "web": "https://www.secondCard.co.il",
-      "image": {
-        "url": "",
-        "alt": ""
+      "image_file": {
+        "path": "uploads/1707735121192-kippa9.webp",
+        "originalname": "kippa9.webp"
       },
-      "address": {
-        "state": "",
-        "country": "test",
-        "city": "test",
-        "street": "test",
-        "houseNumber": 4,
-        "zip": "0"
-      }
+      "quantity": 8,
+      "category": "כיפות"
     },
     {
+      "bizNumber": 2222222,
       "title": "third card",
-      "bizNumber": 3333333,
-      "subtitle": "this is the third card",
       "description": "this is the third card in the database",
-      "phone": "050-8888888",
-      "email": "thirdCard@gmail.com",
+      "price": "50",
       "user_id": "6376274068d78742d84f31d2",
-      "web": "https://www.thirdCard.co.il",
-      "image": {
-        "url": "",
-        "alt": ""
+      "image_file": {
+        "path": "uploads/1707734712014-mezuzah4.png",
+        "originalname": "mezuzah4.png"
       },
-      "address": {
-        "state": "",
-        "country": "test",
-        "city": "test",
-        "street": "test",
-        "houseNumber": 4,
-        "zip": "0"
-      }
+      "quantity": 2,
+      "category": "מזוזות"
     }
   ]
 }
