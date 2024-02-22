@@ -166,7 +166,7 @@ async function canMakeRequests(u) {
     await u.save();
     return true;
     // לשנות פה ל100 בקשות
-  } else if (u.requestCount < 5000) {
+  } else if (u.requestCount < 50000) {
     u.requestCount += 1;
     await u.save();
     return true;

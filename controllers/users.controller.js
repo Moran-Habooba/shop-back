@@ -3,6 +3,7 @@ const { User, validateUser } = require("../models/users.model");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
 const multer = require("multer");
+const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const storage = multer.diskStorage({
   destination: function (req, image_file, cb) {
@@ -289,18 +290,21 @@ const resetPassword = async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
-
-    const hashedPassword = await bcrypt.hash(newPassword, 12);
-    user.password = hashedPassword;
-    await user.save();
+    const resetToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    // const hashedPassword = await bcrypt.hash(newPassword, 12);
+    // user.password = hashedPassword;
+    // await user.save();
 
     // שליחת אימייל למשתמש עם הקישור לאיפוס הסיסמה
-    const resetLink = "http://localhost:3001/resetPassword";
+    // const resetLink = "http://localhost:3001/resetPassword";
+    const resetLink = `http://localhost:3001/resetPassword?token=${resetToken}`;
     const subject = "איפוס סיסמא לאתר תורתך שעשועי";
     const text = `לחץ כאן לאיפוס הסיסמא שלך: ${resetLink}`;
     await sendEmail(email, subject, text);
 
-    return res.status(200).send("Password reset successfully");
+    return res.status(200).send("מייל עם קישור לאיפוס סיסמא נשלח בהצלחה");
   } catch (error) {
     console.error("Error resetting password:", error);
     return res.status(500).send("Internal Server Error");
@@ -333,6 +337,36 @@ async function sendEmail(email, subject, text) {
     console.error("Error sending email:", error);
   }
 }
+
+async function resetUserPassword(req, res) {
+  const { token, newPassword, email } = req.body;
+
+  // ולידציה בסיסית
+  if (!token || !newPassword) {
+    return res.status(400).send("נתונים חסרים");
+  }
+
+  try {
+    // אימות הטוקן
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // איתור המשתמש לפי ה_id שהוחזר מהטוקן
+    const user = await User.findById(decoded._id);
+    if (!user) {
+      return res.status(404).send("משתמש לא נמצא");
+    }
+
+    // הצפנת הסיסמה החדשה ועדכון המשתמש
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    user.password = hashedPassword;
+    await user.save();
+    console.log(`User ${user.email} password was successfully reset.`);
+    res.send("הסיסמה שונתה בהצלחה.");
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    res.status(500).send("שגיאת שרת פנימית");
+  }
+}
 module.exports = {
   addUser,
   getAllUsers,
@@ -341,6 +375,7 @@ module.exports = {
   // changeStatus,
   deleteUserById,
   // promoteUserToAdmin,
+  resetUserPassword,
   changeUserStatus,
   upload,
   resetPassword,
