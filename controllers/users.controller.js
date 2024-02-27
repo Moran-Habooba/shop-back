@@ -297,7 +297,6 @@ const resetPassword = async (req, res) => {
     // user.password = hashedPassword;
     // await user.save();
 
-    // שליחת אימייל למשתמש עם הקישור לאיפוס הסיסמה
     // const resetLink = "http://localhost:3001/resetPassword";
     const resetLink = `http://localhost:3001/resetPassword?token=${resetToken}`;
     const subject = "איפוס סיסמא לאתר תורתך שעשועי";
@@ -318,7 +317,8 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "habooba1818@gmail.com",
-    pass: "pbyi bdpx xfki vwqo",
+    // pass: "pbyi bdpx xfki vwqo",
+    pass: process.env.GMAIL_PASSWORD,
   },
 });
 
@@ -341,22 +341,18 @@ async function sendEmail(email, subject, text) {
 async function resetUserPassword(req, res) {
   const { token, newPassword, email } = req.body;
 
-  // ולידציה בסיסית
   if (!token || !newPassword) {
     return res.status(400).send("נתונים חסרים");
   }
 
   try {
-    // אימות הטוקן
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // איתור המשתמש לפי ה_id שהוחזר מהטוקן
     const user = await User.findById(decoded._id);
     if (!user) {
       return res.status(404).send("משתמש לא נמצא");
     }
 
-    // הצפנת הסיסמה החדשה ועדכון המשתמש
     const hashedPassword = await bcrypt.hash(newPassword, 12);
     user.password = hashedPassword;
     await user.save();

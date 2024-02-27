@@ -2,7 +2,7 @@
 
 ## Description
 
-The project is a Node.js-based application designed for managing user and business-related data. It involves building a REST API, emphasizing on server-side development with a deep understanding of relevant technologies and libraries like Express.js, MongoDB, and others. Key features include user registration, login, content publication, and editing. The project also incorporates advanced features like a file logger for tracking errors and a security mechanism for temporary user account lockout. The application is structured to provide a comprehensive and secure user experience, focusing on clean, well-organized code and efficient data handling.
+The project is a Node.js-based application designed for managing user and business-related data. It involves building a REST API, emphasizing server-side development with a deep understanding of relevant technologies and libraries like Express.js, MongoDB, and others. Key features include user registration, login, content publication, and editing. The project also incorporates advanced features like a file logger for tracking errors and a security mechanism for temporary user account lockout. Additionally, it implements rate limiting on requests to restrict the number of requests a user can make to the server within a specified period, aiming to protect the server from attacks aimed at slowing down or crashing it. The application is structured to provide a comprehensive and secure user experience, focusing on clean, well-organized code and efficient data handling.
 
 ## Technologies Used
 
@@ -107,7 +107,7 @@ Edit user by id (only the registered user)
 PUT /api/users/edit/:id
 ```
 
-Change user status(regular/business) (only the registered user)
+Change user status(regular/business) (only the admin user)
 
 ```shell
 PATCH /api/users/:id
@@ -131,7 +131,7 @@ DELETE /api/users/:id
 
 ### -cards api
 
-create card(Must be a business user to create cards)
+create card(Must be a admin user to create cards)
 
 ```shell
 POST /api/cards
@@ -149,13 +149,13 @@ Get card by id
 GET /api/cards/id:
 ```
 
-Delete card( only the user who created the card or admin)
+Delete card( only the admin)
 
 ```shell
 Delete /api/cards/id:
 ```
 
-Get my cards(only the registered user)
+Get my cards
 
 ```shell
 GET /api/cards/my-cards
@@ -167,13 +167,13 @@ Like card(only the registered user)
 PATCH /api/cards/id:
 ```
 
-Edit card( only the user who created the card )
+Edit card( only admin )
 
 ```shell
 PUT /api/cards/edit/id:
 ```
 
-chang bizNumber( only admin )
+Chang bizNumber( only admin )
 
 ```shell
 PATCH /api/cards/editBiz/id:
@@ -182,6 +182,108 @@ PATCH /api/cards/editBiz/id:
 ### -A link to requests in Postman includes a description of what should be put in the body of the request and examples
 
 [API Documentation](https://documenter.getpostman.com/view/27577545/2s9YsQ6UF7)
+
+### -cart api
+
+Adding a product to the cart
+
+```shell
+POST /api/cart
+```
+
+Update cart
+
+```shell
+PUT /api/cart/update
+```
+
+Complete cart
+
+```shell
+POST /api/cart/complete
+```
+
+Get all the products in the shopping cart
+
+```shell
+GET /api/cart
+```
+
+Remove From Cart
+
+```shell
+DELETE /api/cart/remove/id:
+```
+
+Create order
+
+```shell
+POST /api/cart/create
+```
+
+### -A link to requests in Postman includes a description of what should be put in the body of the request and examples
+
+[API Documentation](https://documenter.getpostman.com/view/27577545/2sA2rDyMeg)
+
+### -Categories api
+
+Add category
+
+```shell
+POST /api/categories
+```
+
+Get all categories
+
+```shell
+GET /api/categories
+```
+
+Delete category
+
+```shell
+DELETE /api/categories/id:
+```
+
+Get Products CountIn Category
+
+```shell
+GET /api/categories/{categoryName}/productsCount
+```
+
+GetProductsByCategory
+
+```shell
+GET /api/categories/{categoryName}/products
+```
+
+### -A link to requests in Postman includes a description of what should be put in the body of the request and examples
+
+[API Documentation](https://documenter.getpostman.com/view/27577545/2sA2rDyMaE)
+
+### -InventoryI api
+
+GetInventoryI By Card Id
+
+```shell
+GET /api/inventoryItem/id:
+```
+
+Adjust Inventory Quantity
+
+```shell
+PATCH /api/inventoryItem/{cardId}/adjust-quantity
+```
+
+Get Inventory Items With Details
+
+```shell
+GET /api/inventoryItem
+```
+
+### -A link to requests in Postman includes a description of what should be put in the body of the request and examples
+
+[API Documentation](https://documenter.getpostman.com/view/27577545/2sA2rDyMVr)
 
 ## Security Features
 
@@ -194,6 +296,10 @@ If a user attempts to log in with the same email address and fails due to incorr
 - **Lockout Trigger**: After three consecutive failed login attempts with the same email.
 - **Lockout Duration**: The user's account will be locked for 24 hours.
 - **Account Recovery**: Users can contact support for assistance or wait until the lockout period expires to regain access.
+
+### Rate Limiting
+
+Implement rate limiting to restrict the number of requests a user can make to the server within a 24-hour period, enhancing protection against abusive usage or potential attacks.
 
 ## Application Logging
 
