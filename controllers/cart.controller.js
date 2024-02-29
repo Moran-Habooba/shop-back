@@ -107,7 +107,7 @@ const updateCart = async (req, res) => {
   const user_id = req.user._id;
   const { itemsToUpdate } = req.body;
 
-  let cart = await Cart.findOne({ user_id, status: "completed" });
+  let cart = await Cart.findOne({ user_id, status: "pending" });
 
   if (!cart) {
     return res.status(400).json({ message: "No pending cart found" });
@@ -139,43 +139,6 @@ const updateCart = async (req, res) => {
   res.status(200).json({ message: "Cart updated successfully", cart });
 };
 
-// const completeOrder = async (req, res) => {
-//   if (!req.user) {
-//     return res.status(401).json({ message: "User not logged in" });
-//   }
-
-//   const user_id = req.user._id;
-
-//   try {
-//     const newOrder = new Order({
-//       user_id: user_id,
-//       orderNumber: generateRandomBizNumber(),
-//       status: "pending",
-//     });
-
-//     await newOrder.save();
-
-//     await Cart.findOneAndDelete({ user_id, status: "pending" });
-
-//     const cart = new Cart({
-//       user_id,
-//       items: [],
-//       status: "pending",
-//     });
-
-//     await cart.save();
-
-//     res
-//       .status(200)
-//       .json({ message: "Order created successfully", order: newOrder });
-//   } catch (error) {
-//     console.error(error);
-//     res
-//       .status(500)
-//       .json({ message: "Error occurred while creating the order" });
-//   }
-// };
-
 const completeOrder = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: "User not logged in" });
@@ -202,8 +165,8 @@ const completeOrder = async (req, res) => {
     await newOrder.save();
 
     const cart = await Cart.findOneAndUpdate(
-      { user_id, status: "completed" },
-      { status: "completed" },
+      { user_id, status: "pending" },
+      { status: "pending" },
       { new: true }
     );
 
@@ -232,7 +195,7 @@ const removeFromCart = async (req, res) => {
   const user_id = req.user._id;
   const card_id = req.params.card_id;
 
-  let cart = await Cart.findOne({ user_id, status: "completed" });
+  let cart = await Cart.findOne({ user_id, status: "pending" });
 
   if (!cart) {
     return res.status(400).json({ message: "No pending cart found" });

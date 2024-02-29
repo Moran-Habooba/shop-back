@@ -317,8 +317,8 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "habooba1818@gmail.com",
-    // pass: "pbyi bdpx xfki vwqo",
-    pass: process.env.GMAIL_PASSWORD,
+    pass: "pbyi bdpx xfki vwqo",
+    // pass: process.env.GMAIL_PASSWORD,
   },
 });
 

@@ -314,3 +314,7 @@ Our application includes an advanced error logging system to enhance monitoring 
 - **Log Directory**: All logs are stored in the `logs` directory at the root of the application.
 
 This logging system ensures that all critical errors are recorded, aiding in quick identification and resolution of issues affecting our users.
+
+## Instructions for Importing Data into MongoDB
+
+**Download the Data File**: Download the data file of the database and insert it into MongoDB compass.
