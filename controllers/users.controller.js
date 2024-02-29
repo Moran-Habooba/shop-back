@@ -2,9 +2,11 @@ const mongoose = require("mongoose");
 const { User, validateUser } = require("../models/users.model");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
+const dotenv = require("dotenv");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+dotenv.config();
 const storage = multer.diskStorage({
   destination: function (req, image_file, cb) {
     cb(null, "uploads/");
@@ -317,8 +319,8 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "habooba1818@gmail.com",
-    pass: "pbyi bdpx xfki vwqo",
-    // pass: process.env.GMAIL_PASSWORD,
+    // pass: "pbyi bdpx xfki vwqo",
+    pass: process.env.GMAIL_PASSWORD,
   },
 });
 
