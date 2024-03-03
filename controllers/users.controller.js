@@ -146,9 +146,7 @@ async function editUser(req, res) {
     delete updateData.email;
     delete updateData.password;
     delete updateData.isBusiness;
-    // if (imagePath) {
-    //   updateData.image_file = { path: imagePath };
-    // }
+
     if (imagePath !== null) {
       updateData.image_file = { path: imagePath };
     } else {
@@ -250,14 +248,12 @@ async function changeUserStatus(req, res) {
     const { isBusiness, isAdmin } = req.body;
     const requestingUser = req.user;
 
-    // בדיקה אם המשתמש המחובר הוא אדמין
     if (!requestingUser.isAdmin) {
       return res
         .status(403)
         .send("Access denied. Only admin users can change user status.");
     }
 
-    // עדכון המשתמש בהתאם לפרמטרים הנתונים
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { isBusiness, isAdmin },
@@ -295,11 +291,7 @@ const resetPassword = async (req, res) => {
     const resetToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    // const hashedPassword = await bcrypt.hash(newPassword, 12);
-    // user.password = hashedPassword;
-    // await user.save();
 
-    // const resetLink = "http://localhost:3001/resetPassword";
     const resetLink = `http://localhost:3001/resetPassword?token=${resetToken}`;
     const subject = "איפוס סיסמא לאתר תורתך שעשועי";
     const text = `לחץ כאן לאיפוס הסיסמא שלך: ${resetLink}`;
@@ -318,7 +310,8 @@ const transporter = nodemailer.createTransport({
   secure: false,
   service: "gmail",
   auth: {
-    user: "habooba1818@gmail.com",
+    // user: "habooba1818@gmail.com",
+    user: process.env.USER,
     // pass: "pbyi bdpx xfki vwqo",
     pass: process.env.GMAIL_PASSWORD,
   },
@@ -327,7 +320,8 @@ const transporter = nodemailer.createTransport({
 async function sendEmail(email, subject, text) {
   try {
     const mailOptions = {
-      from: "habooba1818@gmail.com",
+      // from: "habooba1818@gmail.com",
+      from: process.env.FROM,
       to: email,
       subject: subject,
       text: text,
@@ -340,19 +334,45 @@ async function sendEmail(email, subject, text) {
   }
 }
 
+// async function resetUserPassword(req, res) {
+//   const { token, newPassword, email } = req.body;
+
+//   if (!token || !newPassword) {
+//     return res.status(400).send("נתונים חסרים");
+//   }
+
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+//     const user = await User.findById(decoded._id);
+//     if (!user) {
+//       return res.status(404).send("משתמש לא נמצא");
+//     }
+
+//     const hashedPassword = await bcrypt.hash(newPassword, 12);
+//     user.password = hashedPassword;
+//     await user.save();
+//     console.log(`User ${user.email} password was successfully reset.`);
+//     res.send("הסיסמה שונתה בהצלחה.");
+//   } catch (error) {
+//     console.error("Error resetting password:", error);
+//     res.status(500).send("שגיאת שרת פנימית");
+//   }
+// }
 async function resetUserPassword(req, res) {
   const { token, newPassword, email } = req.body;
 
-  if (!token || !newPassword) {
+  if (!token || !newPassword || !email) {
     return res.status(400).send("נתונים חסרים");
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await User.findById(decoded._id);
+    // בדיקה שהמייל שבטוקן תואם למייל שהמשתמש הזין
+    const user = await User.findOne({ _id: decoded._id, email: email });
     if (!user) {
-      return res.status(404).send("משתמש לא נמצא");
+      return res.status(404).send("המשתמש אינו תואם למייל או לא נמצא");
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 12);
@@ -362,9 +382,13 @@ async function resetUserPassword(req, res) {
     res.send("הסיסמה שונתה בהצלחה.");
   } catch (error) {
     console.error("Error resetting password:", error);
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).send("פג תוקף הטוקן");
+    }
     res.status(500).send("שגיאת שרת פנימית");
   }
 }
+
 module.exports = {
   addUser,
   getAllUsers,
