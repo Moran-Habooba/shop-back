@@ -6,11 +6,7 @@ const nameSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  // middle: {
-  //   type: String,
-  //   trim: true,
-  //   default: "",
-  // },
+
   last: {
     type: String,
     required: true,

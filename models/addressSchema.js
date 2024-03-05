@@ -1,13 +1,6 @@
 const mongoose = require("mongoose");
 
 const addressSchema = new mongoose.Schema({
-  // state: {
-  //   type: String,
-  //   maxLength: 256,
-  //   trim: true,
-  //   lowercase: true,
-  //   default: "",
-  // },
   country: {
     type: String,
     minLength: 2,

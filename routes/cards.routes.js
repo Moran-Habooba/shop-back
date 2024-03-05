@@ -26,7 +26,6 @@ router.get("/my-cards", authorize, getMyCards);
 router.get("/:id", getCardById);
 router.delete("/:id", authorize, deleteCard);
 router.patch("/:id", authorize, likeCard);
-// router.put("/edit/:id", authorize, editCardById);
 router.put("/edit/:id", authorize, upload.single("image_file"), editCardById);
 
 router.patch("/editBiz/:id", authorize, editBizNumberByAdmin);

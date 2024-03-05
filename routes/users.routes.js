@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { User, validateUser } = require("../models/users.model");
+const { User } = require("../models/users.model");
 const upload = require("../controllers/users.controller").upload;
 
 const _ = require("lodash");
@@ -9,9 +9,7 @@ const {
   getAllUsers,
   getUserById,
   editUser,
-  // changeStatus,
   deleteUserById,
-  // promoteUserToAdmin,
   changeUserStatus,
   resetPassword,
   resetUserPassword,
@@ -30,7 +28,6 @@ router.get("/", authorize, getAllUsers);
 router.get("/:id", authorize, getUserById);
 router.put("/edit/:id", authorize, upload.single("image_file"), editUser);
 router.patch("/:id", authorize, changeUserStatus);
-// router.patch("/admin/:id", authorize, promoteUserToAdmin);
 router.delete("/:id", authorize, deleteUserById);
 
 module.exports = router;

@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
-// const nameSchema = require("./nameSchema ");
-// const addressSchema = require("./addressSchema");
-// const imageSchema = require("./imageSchema");
 
 const userSchema = new mongoose.Schema(
   {
@@ -165,8 +162,8 @@ async function canMakeRequests(u) {
     u.requestResetTime = new Date(now.getTime() + 24 * 60 * 60 * 1000);
     await u.save();
     return true;
-    // לשנות פה ל100 בקשות
-  } else if (u.requestCount < 50000) {
+    // Change here to 100 requests
+  } else if (u.requestCount < 100) {
     u.requestCount += 1;
     await u.save();
     return true;
@@ -189,7 +186,6 @@ function validateUser(user) {
     city: Joi.string().min(2).max(256).required(),
     street: Joi.string().min(2).max(256).required(),
     houseNumber: Joi.number().min(1).max(50).required(),
-    // zip: Joi.number().min(1).max(20).required(),
     zip: Joi.number().min(1).max(99999999).integer().required(),
     image_file: Joi.any().optional(),
     email: Joi.string()

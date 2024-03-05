@@ -6,12 +6,6 @@ const addCategory = async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    // if (!req.user.isAdmin) {
-    //   return res
-    //     .status(403)
-    //     .send("Permission denied. Only admins can add categories.");
-    // }
-
     const existingCategory = await Category.findOne({ name: req.body.name });
     if (existingCategory) {
       return res.status(400).send("Category already exists.");

@@ -3,24 +3,6 @@ const { generateRandomBizNumber } = require("../utils/generateRandomBizNumber");
 const mongoose = require("mongoose");
 const multer = require("multer");
 
-// async function addCard(req, res) {
-//   const { error } = validateCard(req.body);
-//   if (error) return res.status(400).send(error.details[0].message);
-//   try {
-//     const randomBizNumber = generateRandomBizNumber();
-//     const userId = req.user._id;
-//     let card = new Card({
-//       ...req.body,
-//       bizNumber: randomBizNumber,
-//       user_id: userId,
-//     });
-//     card.user_id = userId;
-//     card = await card.save();
-//     res.send(card);
-//   } catch (err) {
-//     res.status(500).send("Error: " + err.message);
-//   }
-// }
 function sanitizeFileName(filename) {
   return filename.replace(/[^\w\d. -]/g, "_");
 }
@@ -170,29 +152,6 @@ async function likeCard(req, res) {
   }
 }
 
-//////////////////////////////////
-// const editCardById = async (req, res) => {
-//   try {
-//     const cardId = req.params.id;
-
-//     console.log("Updating card with ID:", cardId);
-//     console.log("Data received for update:", req.body);
-
-//     if (!req.user.isAdmin) {
-//       return res.status(403).send("Access denied. Only admins can edit cards.");
-//     }
-
-//     const updatedCard = await Card.findByIdAndUpdate(cardId, req.body, {
-//       new: true,
-//     });
-
-//     console.log("Updated card:", updatedCard);
-
-//     res.send(updatedCard);
-//   } catch (error) {
-//     res.status(500).send("Error: " + error.message);
-//   }
-// };
 const editCardById = async (req, res) => {
   try {
     const cardId = req.params.id;

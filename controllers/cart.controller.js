@@ -45,7 +45,6 @@ const addToCart = async (req, res) => {
       path: "items.card_id",
       model: "Card",
     });
-    // console.log("Cart with populated items:", JSON.stringify(cart, null, 2));
 
     return res.status(200).json({
       message: "The product has been added to the cart successfully",

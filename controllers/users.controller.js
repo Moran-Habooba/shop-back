@@ -23,31 +23,6 @@ const upload = multer({
   },
 });
 
-// async function addUser(req, res) {
-//   const { error } = validateUser(req.body);
-//   if (error) {
-//     return res.status(400).send(error.details[0].message);
-//   }
-
-//   try {
-//     const user = await User.findOne({ email: req.body.email });
-//     if (user) {
-//       return res.status(400).send("User already registered");
-//     }
-
-//     const newUser = new User({
-//       ...req.body,
-//       password: await bcrypt.hash(req.body.password, 12),
-//     });
-
-//     await newUser.save();
-
-//     res.json(_.pick(newUser, ["_id", "name", "email"]));
-//   } catch (err) {
-//     res.status(500).send("Error: " + err.message);
-//   }
-// }
-
 async function addUser(req, res) {
   const { error } = validateUser(req.body);
   if (error) {
@@ -163,36 +138,6 @@ async function editUser(req, res) {
   }
 }
 
-// async function changeStatus(req, res) {
-//   try {
-//     const userId = req.params.id;
-//     const requestingUser = req.user;
-//     const { isBusiness } = req.body;
-
-//     if (!requestingUser || requestingUser._id !== userId) {
-//       return res
-//         .status(403)
-//         .send(
-//           "Access denied. You can only change the status of your own account."
-//         );
-//     }
-
-//     const updatedUser = await User.findByIdAndUpdate(
-//       userId,
-//       { isBusiness },
-//       { new: true }
-//     ).select("-password");
-
-//     if (!updatedUser) {
-//       return res.status(404).send("User not found.");
-//     }
-
-//     res.json({ isBusiness: updatedUser.isBusiness });
-//   } catch (error) {
-//     return res.status(500).send("An error occurred: " + error.message);
-//   }
-// }
-
 async function deleteUserById(req, res) {
   try {
     const userId = req.params.id;
@@ -214,34 +159,6 @@ async function deleteUserById(req, res) {
   }
 }
 
-// async function promoteUserToAdmin(req, res) {
-//   try {
-//     const userId = req.params.id;
-//     const { isAdmin } = req.body;
-
-//     const connectedUser = await User.findById(req.user._id);
-
-//     if (connectedUser.isAdmin) {
-//       const updatedUser = await User.findByIdAndUpdate(
-//         userId,
-//         { isAdmin },
-//         { new: true }
-//       ).select("-password");
-
-//       if (!updatedUser) {
-//         return res.status(404).send("User not found.");
-//       }
-
-//       res.json({ isAdmin: updatedUser.isAdmin });
-//     } else {
-//       return res
-//         .status(403)
-//         .send("Access denied. Only admin users can change user status.");
-//     }
-//   } catch (error) {
-//     return res.status(500).send("An error occurred: " + error.message);
-//   }
-// }
 async function changeUserStatus(req, res) {
   try {
     const userId = req.params.id;
@@ -272,8 +189,6 @@ async function changeUserStatus(req, res) {
     return res.status(500).send("An error occurred: " + error.message);
   }
 }
-
-//////איפוס סיסמא
 
 const resetPassword = async (req, res) => {
   const { email, newPassword } = req.body;
@@ -310,9 +225,7 @@ const transporter = nodemailer.createTransport({
   secure: false,
   service: "gmail",
   auth: {
-    // user: "habooba1818@gmail.com",
     user: process.env.USER,
-    // pass: "pbyi bdpx xfki vwqo",
     pass: process.env.GMAIL_PASSWORD,
   },
 });
@@ -320,7 +233,6 @@ const transporter = nodemailer.createTransport({
 async function sendEmail(email, subject, text) {
   try {
     const mailOptions = {
-      // from: "habooba1818@gmail.com",
       from: process.env.FROM,
       to: email,
       subject: subject,
@@ -334,31 +246,6 @@ async function sendEmail(email, subject, text) {
   }
 }
 
-// async function resetUserPassword(req, res) {
-//   const { token, newPassword, email } = req.body;
-
-//   if (!token || !newPassword) {
-//     return res.status(400).send("נתונים חסרים");
-//   }
-
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-//     const user = await User.findById(decoded._id);
-//     if (!user) {
-//       return res.status(404).send("משתמש לא נמצא");
-//     }
-
-//     const hashedPassword = await bcrypt.hash(newPassword, 12);
-//     user.password = hashedPassword;
-//     await user.save();
-//     console.log(`User ${user.email} password was successfully reset.`);
-//     res.send("הסיסמה שונתה בהצלחה.");
-//   } catch (error) {
-//     console.error("Error resetting password:", error);
-//     res.status(500).send("שגיאת שרת פנימית");
-//   }
-// }
 async function resetUserPassword(req, res) {
   const { token, newPassword, email } = req.body;
 
@@ -369,7 +256,6 @@ async function resetUserPassword(req, res) {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // בדיקה שהמייל שבטוקן תואם למייל שהמשתמש הזין
     const user = await User.findOne({ _id: decoded._id, email: email });
     if (!user) {
       return res.status(404).send("המשתמש אינו תואם למייל או לא נמצא");
@@ -394,9 +280,7 @@ module.exports = {
   getAllUsers,
   getUserById,
   editUser,
-  // changeStatus,
   deleteUserById,
-  // promoteUserToAdmin,
   resetUserPassword,
   changeUserStatus,
   upload,

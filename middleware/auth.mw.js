@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const chalk = require("chalk");
-const { User, canMakeRequests } = require("../models/users.model");
 
 async function authorize(req, res, next) {
   const token = req.header("x-auth-token");
@@ -13,12 +12,6 @@ async function authorize(req, res, next) {
     console.log(chalk.blue("JWT payload:", JSON.stringify(payload, null, 2)));
 
     req.user = payload;
-
-    // const user = await User.findById(req.user._id);
-    // const canMakeRequest = await canMakeRequests(user);
-    // if (!canMakeRequest) {
-    //   throw new Error("Too many requests.. please try again tomorrow");
-    // }
 
     if (payload.role) {
       if (payload.role === "admin") {
