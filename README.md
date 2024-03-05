@@ -127,7 +127,7 @@ DELETE /api/users/:id
 
 ### -A link to requests in Postman includes a description of what should be put in the body of the request and examples
 
-[API Documentation](https://documenter.getpostman.com/view/27577545/2s9YsQ6UPy)
+[API Documentation](https://documenter.getpostman.com/view/27577545/2sA2xccFse)
 
 ### -cards api
 
@@ -181,7 +181,7 @@ PATCH /api/cards/editBiz/id:
 
 ### -A link to requests in Postman includes a description of what should be put in the body of the request and examples
 
-[API Documentation](https://documenter.getpostman.com/view/27577545/2s9YsQ6UF7)
+[API Documentation](https://documenter.getpostman.com/view/27577545/2sA2xccFwx)
 
 ### -cart api
 
