@@ -22,7 +22,6 @@ const cardsSchema = new mongoose.Schema({
   price: {
     type: String,
     required: true,
-    match: RegExp(/^\₪?\d{1,3}(,\d{3})*(\.\d{2})?$/),
     minLength: 1,
     maxLength: 9999,
   },
@@ -74,7 +73,6 @@ function validateCard(card) {
     title: Joi.string().min(2).max(256).required(),
     description: Joi.string().min(2).max(1024).required(),
     price: Joi.string()
-      .pattern(/^\₪?\d{1,3}(,\d{3})*(\.\d{2})?$/)
       .required()
       .custom((value, helpers) => {
         let numberValue = Number(value.replace(/₪|,|\./g, ""));
