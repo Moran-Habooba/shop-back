@@ -289,7 +289,8 @@ const getAllClosedOrders = async (req, res) => {
     });
 
     if (!closedOrders.length) {
-      return res.status(404).json({ message: "No closed orders found" });
+      // return res.status(404).json({ message: "No closed orders found" });
+      return;
     }
 
     res.json({ closedOrders });

@@ -1,8 +1,8 @@
 {
   "users": [
     {
-      " first_name": "regular",
-      " last_name": "user",
+      "first_name": "regular",
+      "last_name": "user",
       "isBusiness": false,
       "phone": "0507777777",
       "email": "regular@gmail.com",
@@ -17,8 +17,8 @@
       }
     },
     {
-      " first_name": "business",
-      " last_name": "user",
+      "first_name": "business",
+      "last_name": "user",
       "isBusiness": true,
       "phone": "0507777777",
       "email": "business@gmail.com",
@@ -33,8 +33,8 @@
       }
     },
     {
-      " first_name": "admin",
-      " last_name": "user",
+      "first_name": "admin",
+      "last_name": "user",
       "isBusiness": false,
       "isAdmin": true,
       "phone": "0507777777",
@@ -61,14 +61,14 @@
         "path": "uploads/1707734439263-Sabbath6.jpg",
         "originalname": "Sabbath6.jpg"
       },
-      "quantity": 10,
+      "quantity": 7,
       "category": "שבת"
     },
     {
       "bizNumber": 2222222,
       "title": "second card",
       "description": "this is the second card in the database",
-      "price": "50",
+      "price": "70",
       "user_id": "6376274068d78742d84f31d2",
       "image_file": {
         "path": "uploads/1707735121192-kippa9.webp",
@@ -81,7 +81,7 @@
       "bizNumber": 2222222,
       "title": "third card",
       "description": "this is the third card in the database",
-      "price": "50",
+      "price": "150",
       "user_id": "6376274068d78742d84f31d2",
       "image_file": {
         "path": "uploads/1707734712014-mezuzah4.png",
@@ -89,6 +89,26 @@
       },
       "quantity": 2,
       "category": "מזוזות"
+    }
+  ],
+  "categoriesData": [
+    {
+      "name": "חגים"
+    },
+    {
+      "name": "כיפות"
+    },
+    {
+      "name": "מזוזות"
+    },
+    {
+      "name": "נטלות"
+    },
+    {
+      "name": "סידורים"
+    },
+    {
+      "name": "שבת"
     }
   ]
 }

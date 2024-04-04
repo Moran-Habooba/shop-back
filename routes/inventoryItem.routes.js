@@ -8,7 +8,7 @@ const {
 } = require("../controllers/inventoryItem.controller");
 
 router.get("/", authorize, getInventoryItemsWithDetails);
-router.get("/:id", authorize, getInventoryItemByCardId);
+router.get("/:id", getInventoryItemByCardId);
 router.patch("/:id/adjust-quantity", authorize, adjustInventoryQuantity);
 
 module.exports = router;

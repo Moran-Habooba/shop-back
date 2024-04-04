@@ -58,7 +58,7 @@ This sets NODE_ENV to 'development' and runs the app with nodemon for hot reload
 
 ```shell
 
-npm run seed-db
+npm run dev
 ```
 
 Runs the seeding script to populate your database with initial data.

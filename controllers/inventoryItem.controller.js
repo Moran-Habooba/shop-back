@@ -25,6 +25,7 @@ const adjustInventoryQuantity = async (req, res) => {
   try {
     const card = await Card.findById(req.params.id);
     if (!card) return res.status(404).send("כרטיס לא נמצא.");
+    console.log("Sending inventory quantity:", card.quantity);
 
     card.quantity += adjustment;
     await card.save();

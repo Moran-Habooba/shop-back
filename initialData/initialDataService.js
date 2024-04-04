@@ -1,6 +1,8 @@
-const { users, cards } = require("./initialData.json");
+const { users, cards, categoriesData } = require("./initialData.json");
 const { User } = require("../models/users.model");
 const { Card } = require("../models/cards.model");
+const { Category } = require("../models/category.model");
+
 const _ = require("lodash");
 const chalk = require("chalk");
 const bcrypt = require("bcrypt");
@@ -28,6 +30,7 @@ async function seed() {
 
   if (firstBusinessUser) {
     await generateCards(firstBusinessUser._id);
+    await generateCategories(categoriesData);
   }
 
   console.log(chalk.yellow("seeded"));
@@ -54,4 +57,22 @@ async function generateCards(user_id) {
 
   return await Promise.all(Ps);
 }
+async function generateCategories(categoriesData) {
+  const Ps = [];
+  for (const categoryData of categoriesData) {
+    const existingCategory = await Category.findOne({
+      name: categoryData.name,
+    });
+    if (!existingCategory) {
+      const newCategory = new Category(categoryData);
+      await newCategory.save();
+      Ps.push(newCategory);
+    } else {
+      console.log(`Category ${categoryData.name} already exists`);
+    }
+  }
+
+  return await Promise.all(Ps);
+}
+
 module.exports = { seed };
