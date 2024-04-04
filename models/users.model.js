@@ -185,7 +185,6 @@ function validateUser(user) {
     country: Joi.string().min(2).max(256).required(),
     city: Joi.string().min(2).max(256).required(),
     street: Joi.string().min(2).max(256).required(),
-    // houseNumber: Joi.number().min(1).max(250).required(),
     houseNumber: Joi.number().min(1).max(99999999).required(),
     zip: Joi.number().min(1).max(99999999).integer().required(),
     image_file: Joi.any().optional(),
